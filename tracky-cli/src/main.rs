@@ -1,17 +1,53 @@
-use std::env;
-use std::path::Path;
-use tracky_core::scan_media;
+use clap::{Parser, Subcommand};
+use std::path::PathBuf;
+
+mod scanner;
+
+#[derive(Parser)]
+#[command(name = "tracky-cli")]
+#[command(about = "Music library scanner & validator", long_about = None)]
+struct Cli {
+    #[command(subcommand)]
+    command: Commands,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// Scan a folder and output basic info
+    Scan {
+        /// Path to folder containing music files
+        path: PathBuf,
+    },
+
+    /// Validate tags in a folder (does not save)
+    Validate {
+        /// Path to folder containing music files
+        path: PathBuf,
+    },
+
+    /// Build a SQLite database from the folder
+    BuildDb {
+        /// Path to folder containing music files
+        path: PathBuf,
+    },
+}
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let cli = Cli::parse();
 
-    if args.len() < 2 {
-        eprintln!("Usage: tracky-cli <media-folder>");
-        std::process::exit(1);
+    match cli.command {
+        Commands::Scan { path } => {
+            let files = scanner::scan_folder(&path);
+            println!("Found {} audio files:", files.len());
+            for f in files {
+                println!(" - {}", f.path.display());
+            }
+        }
+        Commands::Validate { path } => {
+            println!("VALIDATE → {:?}", path);
+        }
+        Commands::BuildDb { path } => {
+            println!("BUILD-DB → {:?}", path);
+        }
     }
-
-    let root = Path::new(&args[1]);
-    let result = scan_media(root);
-
-    println!("{}", serde_json::to_string_pretty(&result).unwrap());
 }

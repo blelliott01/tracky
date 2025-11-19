@@ -19,3 +19,9 @@ cargo install cargo-audit
 
 cargo binstall cargo-outdated
 cargo binstall cargo-audit
+
+## CLI Commands
+tracky-cli scan <path>
+tracky-cli validate <path>
+tracky-cli build-db <path>
+
