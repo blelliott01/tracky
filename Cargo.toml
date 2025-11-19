@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "tracky-core",
+    "tracky-cli",
+]
+resolver = "2"

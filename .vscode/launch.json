@@ -1,0 +1,15 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "lldb",
+            "request": "launch",
+            "name": "Debug Tracky CLI",
+            "program": "${workspaceFolder}/tracky-cli/target/debug/tracky-cli",
+            "args": [
+                "../example_media"
+            ],
+            "cwd": "${workspaceFolder}/tracky-cli"
+        }
+    ]
+}
