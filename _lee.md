@@ -25,3 +25,6 @@ tracky-cli scan <path>
 tracky-cli validate <path>
 tracky-cli build-db <path>
 
+## Install my app to use
+
+

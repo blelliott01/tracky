@@ -1,35 +1,29 @@
 use clap::{Parser, Subcommand};
-use std::path::PathBuf;
+use std::path::Path;
 
+mod json_models;
+mod models;
 mod scanner;
+mod tag_reader;
+mod tag_rules;
+mod tag_validator;
 
 #[derive(Parser)]
 #[command(name = "tracky-cli")]
 #[command(about = "Music library scanner & validator", long_about = None)]
 struct Cli {
+    #[arg(global = true, long = "json")]
+    pub json: bool,
+
     #[command(subcommand)]
     command: Commands,
 }
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Scan a folder and output basic info
-    Scan {
-        /// Path to folder containing music files
-        path: PathBuf,
-    },
-
-    /// Validate tags in a folder (does not save)
-    Validate {
-        /// Path to folder containing music files
-        path: PathBuf,
-    },
-
-    /// Build a SQLite database from the folder
-    BuildDb {
-        /// Path to folder containing music files
-        path: PathBuf,
-    },
+    Scan { path: String },
+    Validate { path: String },
+    Read { file: String },
 }
 
 fn main() {
@@ -37,17 +31,52 @@ fn main() {
 
     match cli.command {
         Commands::Scan { path } => {
-            let files = scanner::scan_folder(&path);
-            println!("Found {} audio files:", files.len());
-            for f in files {
-                println!(" - {}", f.path.display());
+            let path = std::path::Path::new(&path);
+
+            if !path.exists() {
+                eprintln!("Path does not exist: {}", path.display());
+                std::process::exit(1);
             }
+
+            println!("Scanning {} ...", path.display());
+
+            // 🔥 This is the correct call — matches your Swift scanner
+            let files = scanner::scan_folder(path);
+
+            // You likely want to filter like Swift:
+            // only .m4a files
+            let m4a: Vec<_> = files
+                .into_iter()
+                .filter(|f| f.path.to_lowercase().ends_with(".m4a"))
+                .collect();
+
+            for f in &m4a {
+                println!("{} ({} bytes)", f.path, f.size);
+            }
+
+            println!("Done. {} m4a files found.", m4a.len());
         }
+
         Commands::Validate { path } => {
             println!("VALIDATE → {:?}", path);
         }
-        Commands::BuildDb { path } => {
-            println!("BUILD-DB → {:?}", path);
+
+        Commands::Read { file } => {
+            let p = Path::new(&file);
+
+            if !p.exists() {
+                eprintln!("File does not exist: {}", p.display());
+                std::process::exit(1);
+            }
+
+            match tag_reader::read_tags(p) {
+                Some(tags) => {
+                    println!("{:#?}", tags);
+                }
+                None => {
+                    eprintln!("Could not read tags for {}", file);
+                }
+            }
         }
     }
 }

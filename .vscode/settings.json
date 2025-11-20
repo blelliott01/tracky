@@ -1,10 +1,67 @@
 {
+    // -----------------------------------------
+    // Editor Behavior
+    // -----------------------------------------
+    "editor.tabSize": 4,
+    "editor.insertSpaces": true,
     "editor.formatOnSave": true,
-    "[rust]": {
-        "editor.defaultFormatter": "rust-lang.rust-analyzer"
+    "editor.formatOnPaste": true,
+    "editor.formatOnType": true,
+    "editor.wordWrap": "off",
+    "editor.minimap.enabled": false,
+    "editor.inlayHints.enabled": "off",
+    "editor.inlineSuggest.enabled": false,
+    "editor.semanticHighlighting.enabled": true,
+    "editor.semanticTokenColorCustomizations": {
+        "rules": {
+            "*.mutable": {
+                "underline": false
+            }
+        }
     },
+    // -----------------------------------------
+    // Rust Analyzer
+    // -----------------------------------------
+    "rust-analyzer.cargo.buildScripts.enable": true,
+    "rust-analyzer.procMacro.enable": true,
+    "rust-analyzer.checkOnSave": true,
     "rust-analyzer.check.command": "clippy",
-    "rust-analyzer.inlayHints.typeHints.enable": true,
-    "rust-analyzer.inlayHints.parameterHints.enable": true,
-    "rust-analyzer.inlayHints.chainingHints.enable": true
+    "rust-analyzer.diagnostics.enable": true,
+    "rust-analyzer.hover.actions.enable": false,
+    "rust-analyzer.lens.enable": false,
+    "rust-analyzer.diagnostics.warningsAsHint": [
+        "*"
+    ],
+    // -----------------------------------------
+    // Files / Project-level
+    // -----------------------------------------
+    "files.exclude": {
+        "**/.git": true,
+        "**/target": true,
+        "**/.swiftpm": true,
+        "**/.build": true,
+        "**/.DS_Store": true
+    },
+    "search.exclude": {
+        "**/target": true,
+        "**/.build": true
+    },
+    // -----------------------------------------
+    // Terminal / Shell
+    // -----------------------------------------
+    "terminal.integrated.defaultProfile.osx": "zsh",
+    "terminal.integrated.fontFamily": "Menlo, Monaco, 'Courier New', monospace",
+    // -----------------------------------------
+    // UI Tweaks
+    // -----------------------------------------
+    "workbench.iconTheme": "vs-seti",
+    "workbench.colorTheme": "Quiet Light",
+    "breadcrumbs.enabled": true,
+    "explorer.compactFolders": false,
+    // -----------------------------------------
+    // JSON / Formatting
+    // -----------------------------------------
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    }
 }
